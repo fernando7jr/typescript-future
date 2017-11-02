@@ -1,0 +1,25 @@
+{
+  "name": "future",
+  "version": "1.0.0",
+  "description": "Promise like async callback",
+  "main": "index.js",
+  "scripts": {
+    "test": "test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/metadeta96/typescript-future.git"
+  },
+  "keywords": [
+    "promise",
+    "future",
+    "async",
+    "callback"
+  ],
+  "author": "metadeta96",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/metadeta96/typescript-future/issues"
+  },
+  "homepage": "https://github.com/metadeta96/typescript-future#readme"
+}

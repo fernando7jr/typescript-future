@@ -2,7 +2,7 @@
   "name": "future",
   "version": "1.0.0",
   "description": "Promise like async callback",
-  "main": "index.js",
+  "main": "future.js",
   "scripts": {
     "test": "test.js"
   },

@@ -78,7 +78,7 @@ export class Future<T> {
         return this;
     }
 
-    public static now<T>(callback: (resolve, reject) => void) {
+    public static now<T>(callback: (resolve, reject) => void): Promise<T> {
         return new Future<T>(callback).value(() => {
 
         }).catch(() => {
@@ -86,7 +86,7 @@ export class Future<T> {
         }).now();
     }
 
-    public async now() {
+    public async now(): Promise<T> {
         return await new Promise<T>((resolve, reject) => {
             if (this._value)
                 return resolve(this._value);

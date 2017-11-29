@@ -1,6 +1,8 @@
 export class Future<T> {
     private _then;
+    private __interceptThen;
     private _catch;
+    private __interceptCatch;
     private _inited: boolean = false;
     private _requested: boolean = false;
     private _value: T = null;
@@ -19,11 +21,25 @@ export class Future<T> {
         
     };
 
+    private _resolve(result: T): void {
+        this._then(result);
+        if (this.__interceptThen) {
+            this.__interceptThen(result);
+        }
+    }
+
+    private _reject(error: any): void {
+        this._catch(error);
+        if (this.__interceptCatch) {
+            this.__interceptCatch(error);
+        }
+    }
+
     public cancel(error: any): any {
         if (this._canceled)
             return;
         if (this._initedError) {
-            this._catch(error);
+            this._reject(error);
         } else {
             this._requestedError = true;
             this._valueError = error;
@@ -36,7 +52,7 @@ export class Future<T> {
         if (this._canceled)
             return;
         if (this._inited) {
-            this._then(result);
+            this._resolve(result);
         } else {
             this._requested = true;
             this._value = result;
@@ -60,5 +76,36 @@ export class Future<T> {
             this.cancel(this._valueError);
         }
         return this;
+    }
+
+    public static now<T>(callback: (resolve, reject) => void) {
+        return new Future<T>(callback).value(() => {
+
+        }).catch(() => {
+
+        }).now();
+    }
+
+    public async now() {
+        return await new Promise<T>((resolve, reject) => {
+            if (this._value)
+                return resolve(this._value);
+            const _then = this.__interceptThen;
+            const _catch = this.__interceptCatch;
+            this.__interceptThen = (result) => {
+                resolve(result);
+                this.__interceptThen = _then;
+                if (_then) {
+                    _then(result);
+                }
+            }
+            this.__interceptCatch = (error) => {
+                reject(error);
+                this.__interceptCatch = _catch;
+                if (_catch) {
+                    _catch(error);
+                }
+            }
+        });
     }
 }
